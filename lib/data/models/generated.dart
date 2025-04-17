@@ -1,27 +1,27 @@
-class HistoryModel {
+class GeneratedModel {
   final int? id;
   final String content;
   final String type; // 'barcode' or 'qrcode'
   final DateTime createAt;
 
-  HistoryModel({
+  GeneratedModel({
     this.id,
     required this.content,
     required this.type,
     required this.createAt,
   });
 
-  factory HistoryModel.fromMap(Map<String, dynamic> map) => HistoryModel(
+  factory GeneratedModel.fromMap(Map<String, dynamic> map) => GeneratedModel(
     id: map['id'],
     content: map['content'],
     type: map['type'],
-    createAt: DateTime.parse(map['dateTime']),
+    createAt: DateTime.parse(map['createAt']),
   );
 
   Map<String, dynamic> toMap() => {
     'id': id,
     'content': content,
     'type': type,
-    'dateTime': createAt.toIso8601String(),
+    'createAt': createAt.toIso8601String(),
   };
 }

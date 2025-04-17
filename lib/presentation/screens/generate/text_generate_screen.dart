@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqs_mobile/presentation/screens/result/text_result_screen.dart';
 import 'package:sqs_mobile/presentation/widgets/default_button.dart';
 import 'package:sqs_mobile/presentation/widgets/default_header.dart';
 import 'package:sqs_mobile/presentation/widgets/text_field.dart';
@@ -91,11 +92,20 @@ class _TextGenerateScreenState extends State<TextGenerateScreen> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(height: 10),
+                                    SizedBox(height: 20),
+
                                     DefaultButton(
                                       title: "Generate QR Code",
                                       onPress: () {
-                                        print(textController.text);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => TextResultScreen(
+                                                  textData: textController.text,
+                                                ),
+                                          ),
+                                        );
                                       },
                                     ),
                                   ],
