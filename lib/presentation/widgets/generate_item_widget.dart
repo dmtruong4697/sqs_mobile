@@ -28,7 +28,7 @@ class GenerateItemWidget extends StatelessWidget {
       'assets/icons/generate/${qrType.name}.png',
       height: 20,
       width: 20,
-      color: AppColors.primaryLight,
+      color: AppColors.white,
       fit: BoxFit.contain,
     );
   }
@@ -41,10 +41,10 @@ class GenerateItemWidget extends StatelessWidget {
     Widget screen;
     switch (qrType) {
       case QRType.text:
-        screen = TextGenerateScreen();
+        screen = TextGenerateScreen(data: null);
         break;
       case QRType.url:
-        screen = UrlGenerateScreen();
+        screen = UrlGenerateScreen(data: null);
         break;
       default:
         screen = ScanScreen();
@@ -63,9 +63,9 @@ class GenerateItemWidget extends StatelessWidget {
             width: 76,
             height: 76,
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: AppColors.primaryDark,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(width: 2, color: AppColors.primaryLight),
+              border: Border.all(width: 2, color: AppColors.primaryDark),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.15),

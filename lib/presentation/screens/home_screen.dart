@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(index: _selectedIndex, children: _screen),
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.light,
         items: <Widget>[
           Icon(
             Icons.add,

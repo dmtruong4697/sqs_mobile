@@ -31,12 +31,12 @@ class _GenerateScreenState extends State<GenerateScreen> {
       backgroundColor: AppColors.light,
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              "assets/images/background.png",
-              fit: BoxFit.cover,
-            ),
-          ),
+          // Positioned.fill(
+          //   child: Image.asset(
+          //     "assets/images/background.png",
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           SafeArea(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),

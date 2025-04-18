@@ -25,6 +25,8 @@ class DBProvider {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             content TEXT,
             type TEXT,
+            qrType TEXT,
+            barcodeType TEXT,
             createAt TEXT
           );
         ''');
@@ -34,6 +36,8 @@ class DBProvider {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             content TEXT,
             type TEXT,
+            qrType TEXT,
+            barcodeType TEXT,
             createAt TEXT
           );
         ''');

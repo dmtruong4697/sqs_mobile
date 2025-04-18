@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:sqs_mobile/data/models/generated.dart';
 import 'package:sqs_mobile/data/repositories/generated_repository.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate/url_generate_screen.dart';
 import 'package:sqs_mobile/presentation/widgets/default_button.dart';
 import 'package:sqs_mobile/presentation/widgets/default_header.dart';
 import 'package:sqs_mobile/presentation/widgets/square_button.dart';
@@ -17,11 +18,11 @@ import 'package:sqs_mobile/presentation/widgets/text_field.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:path_provider/path_provider.dart';
 
-class TextResultScreen extends StatefulWidget {
+class UrlResultScreen extends StatefulWidget {
   final String textData;
   final GeneratedModel? data;
   final bool isFromHistoryList;
-  const TextResultScreen({
+  const UrlResultScreen({
     super.key,
     required this.textData,
     required this.isFromHistoryList,
@@ -29,17 +30,16 @@ class TextResultScreen extends StatefulWidget {
   });
 
   @override
-  State<TextResultScreen> createState() => _TextResultScreenState();
+  State<UrlResultScreen> createState() => _UrlResultScreenState();
 }
 
-class _TextResultScreenState extends State<TextResultScreen> {
+class _UrlResultScreenState extends State<UrlResultScreen> {
   final GlobalKey qrKey = GlobalKey();
   int record = 0;
 
   @override
   void initState() {
     super.initState();
-    // _saveGenerated();
   }
 
   Future<void> _showQrShare() async {
@@ -69,7 +69,7 @@ class _TextResultScreenState extends State<TextResultScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TextGenerateScreen(data: widget.data),
+            builder: (context) => UrlGenerateScreen(data: widget.data),
           ),
         );
       });
@@ -218,7 +218,7 @@ class _TextResultScreenState extends State<TextResultScreen> {
                                             Row(
                                               children: [
                                                 Image.asset(
-                                                  "assets/icons/generate/text.png",
+                                                  "assets/icons/generate/url.png",
                                                   height: 60,
                                                   width: 60,
                                                 ),
@@ -228,7 +228,7 @@ class _TextResultScreenState extends State<TextResultScreen> {
                                                       CrossAxisAlignment.start,
                                                   children: const [
                                                     Text(
-                                                      "Text",
+                                                      "URL",
                                                       style: TextStyle(
                                                         fontFamily:
                                                             'Montserrat',

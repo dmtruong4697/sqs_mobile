@@ -18,6 +18,22 @@ class ScannedRepository {
     return result.map((e) => ScannedModel.fromMap(e)).toList();
   }
 
+  Future<void> update(ScannedModel code) async {
+    final db = await DBProvider().database;
+    await db.update(
+      'scanned',
+      code.toMap(),
+      where: 'id = ?',
+      whereArgs: [code.id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<void> delete(String id) async {
+    final db = await DBProvider().database;
+    await db.delete('scanned', where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<void> clear() async {
     final db = await DBProvider().database;
     await db.delete('scanned');
