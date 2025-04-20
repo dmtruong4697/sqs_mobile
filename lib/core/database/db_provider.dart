@@ -41,6 +41,17 @@ class DBProvider {
             createAt TEXT
           );
         ''');
+
+        await db.execute('''
+          CREATE TABLE scanned (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            content TEXT,
+            type TEXT,
+            qrType TEXT,
+            barcodeType TEXT,
+            createAt TEXT
+          );
+        ''');
       },
     );
   }

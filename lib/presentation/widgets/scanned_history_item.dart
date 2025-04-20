@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sqs_mobile/data/models/generated.dart';
+import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/text_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/url_result_screen.dart';
@@ -8,12 +8,12 @@ import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/date_time_helper.dart';
 import 'package:sqs_mobile/utils/type_helper.dart';
 
-class GeneratedHistoryItem extends StatefulWidget {
-  final GeneratedModel data;
+class ScannedHistoryItem extends StatefulWidget {
+  final ScannedModel data;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
 
-  const GeneratedHistoryItem({
+  const ScannedHistoryItem({
     super.key,
     required this.data,
     this.onTap,
@@ -21,10 +21,10 @@ class GeneratedHistoryItem extends StatefulWidget {
   });
 
   @override
-  _GeneratedHistoryItemState createState() => _GeneratedHistoryItemState();
+  _ScannedHistoryItemState createState() => _ScannedHistoryItemState();
 }
 
-class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
+class _ScannedHistoryItemState extends State<ScannedHistoryItem> {
   bool isDown = false;
 
   @override
@@ -34,31 +34,31 @@ class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
   }
 
   void onNavigate() {
-    if (widget.data.qrType == 'text') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => TextResultScreen(
-                textData: widget.data.content,
-                isFromHistoryList: true,
-                data: widget.data,
-              ),
-        ),
-      );
-    } else if (widget.data.qrType == 'url') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => UrlResultScreen(
-                textData: widget.data.content,
-                isFromHistoryList: true,
-                data: widget.data,
-              ),
-        ),
-      );
-    }
+    // if (widget.data.qrType == 'text') {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder:
+    //           (context) => TextResultScreen(
+    //             textData: widget.data.content,
+    //             isFromHistoryList: true,
+    //             data: widget.data,
+    //           ),
+    //     ),
+    //   );
+    // } else if (widget.data.qrType == 'url') {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder:
+    //           (context) => UrlResultScreen(
+    //             textData: widget.data.content,
+    //             isFromHistoryList: true,
+    //             data: widget.data,
+    //           ),
+    //     ),
+    //   );
+    // }
   }
 
   @override

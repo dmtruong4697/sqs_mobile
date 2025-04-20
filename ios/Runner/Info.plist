@@ -4,12 +4,14 @@
 <dict>
 	<key>NSCameraUsageDescription</key>
 	<string>App needs camera access to scan QR codes</string>
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Sqs Mobile</string>
+	<string>Free QR Scanner</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

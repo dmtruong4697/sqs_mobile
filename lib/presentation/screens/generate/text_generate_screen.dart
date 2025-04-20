@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sqs_mobile/data/models/generated.dart';
 import 'package:sqs_mobile/data/repositories/generated_repository.dart';
-import 'package:sqs_mobile/presentation/screens/result/text_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/text_result_screen.dart';
 import 'package:sqs_mobile/presentation/widgets/default_button.dart';
 import 'package:sqs_mobile/presentation/widgets/default_header.dart';
 import 'package:sqs_mobile/presentation/widgets/text_field.dart';

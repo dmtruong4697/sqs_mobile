@@ -15,9 +15,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 1;
   final List<Widget> _screen = [
-    GenerateScreen(),
-    ScanScreen(),
-    HistoryScreen(),
+    const GenerateScreen(),
+    const ScanScreen(),
+    const HistoryScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -29,10 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(index: _selectedIndex, children: _screen),
       bottomNavigationBar: CurvedNavigationBar(
         index: _selectedIndex,
-        backgroundColor: AppColors.light,
+        backgroundColor: Colors.transparent,
         items: <Widget>[
           Icon(
             Icons.add,

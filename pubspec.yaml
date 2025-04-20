@@ -42,6 +42,12 @@ dependencies:
   path_provider: any
   qr_code_scanner: ^1.0.1
   mobile_scanner: ^6.0.7
+  qr_code_scanner_plus: ^2.0.10+1
+  image_picker: ^1.1.2
+  audioplayers: ^6.4.0
+  barcode_widget: ^2.0.4
+  webview_flutter: ^4.11.0
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +95,8 @@ flutter:
     - assets/icons/generate/wifi.png
 
     - assets/images/background.png
+
+    - assets/sounds/beep.mp3
 
   fonts:
     - family: Montserrat

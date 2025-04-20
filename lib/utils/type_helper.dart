@@ -13,6 +13,8 @@ QRType detectQRType(String input) {
   } else if (input.startsWith("mailto:") ||
       RegExp(r"^[\w\.-]+@[\w\.-]+\.\w{2,}$").hasMatch(input)) {
     return QRType.email;
+  } else if (input.startsWith("MATMSG:TO:")) {
+    return QRType.email;
   } else if (input.startsWith("MECARD:") || input.startsWith("BEGIN:VCARD")) {
     return QRType.contact;
   } else if (input.startsWith("BEGIN:VEVENT") ||
@@ -27,9 +29,30 @@ QRType detectQRType(String input) {
     return QRType.twitter;
   } else if (input.contains("instagram.com/")) {
     return QRType.instagram;
-  } else if (Uri.tryParse(input)?.hasAbsolutePath == true) {
+  } else if (Uri.tryParse(input)?.hasScheme == true &&
+      Uri.tryParse(input)?.hasAuthority == true) {
     return QRType.url;
   }
 
   return QRType.text;
+}
+
+BarcodeType detectBarcodeType(String input) {
+  input = input.trim();
+
+  if (RegExp(r'^\d{12,13}$').hasMatch(input)) {
+    // EAN-13 hoặc UPC-A
+    return BarcodeType.ean;
+  } else if (RegExp(r'^\d{8}$').hasMatch(input)) {
+    // EAN-8
+    return BarcodeType.ean;
+  } else if (RegExp(r'^[A-Z0-9]{10,20}$').hasMatch(input)) {
+    // Code 128 thường gồm ký tự chữ/số (ví dụ mã kho, đơn hàng)
+    return BarcodeType.code128;
+  } else if (RegExp(r'^[0-9]{14}$').hasMatch(input)) {
+    // ITF-14 (mã thùng carton/logistics)
+    return BarcodeType.itf14;
+  }
+
+  return BarcodeType.text;
 }

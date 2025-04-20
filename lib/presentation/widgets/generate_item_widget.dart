@@ -19,6 +19,108 @@ enum QRType {
   wifi,
 }
 
+extension QRTypesExtension on QRType {
+  int asInt() {
+    return index;
+  }
+
+  static QRType fromString(String type) {
+    switch (type) {
+      case 'bluetooth':
+        return QRType.bluetooth;
+      case 'contact':
+        return QRType.contact;
+      case 'email':
+        return QRType.email;
+      case 'event':
+        return QRType.event;
+      case 'instagram':
+        return QRType.instagram;
+      case 'location':
+        return QRType.location;
+      case 'telephone':
+        return QRType.telephone;
+      case 'text':
+        return QRType.text;
+      case 'twitter':
+        return QRType.twitter;
+      case 'url':
+        return QRType.url;
+      case 'whatsapp':
+        return QRType.whatsapp;
+      case 'wifi':
+        return QRType.wifi;
+      default:
+        return QRType.text; // Default fallback type
+    }
+  }
+
+  String get typeName {
+    switch (this) {
+      case QRType.bluetooth:
+        return 'bluetooth';
+      case QRType.contact:
+        return 'contact';
+      case QRType.email:
+        return 'email';
+      case QRType.event:
+        return 'event';
+      case QRType.instagram:
+        return 'instagram';
+      case QRType.location:
+        return 'location';
+      case QRType.telephone:
+        return 'telephone';
+      case QRType.text:
+        return 'text';
+      case QRType.twitter:
+        return 'twitter';
+      case QRType.url:
+        return 'url';
+      case QRType.whatsapp:
+        return 'whatsapp';
+      case QRType.wifi:
+        return 'wifi';
+      default:
+        return 'unknown';
+    }
+  }
+}
+
+enum BarcodeType { ean, code128, itf14, text }
+
+extension BarcodeTypeExtension on BarcodeType {
+  static BarcodeType fromString(String type) {
+    switch (type) {
+      case 'ean':
+        return BarcodeType.ean;
+      case 'code128':
+        return BarcodeType.code128;
+      case 'itf14':
+        return BarcodeType.itf14;
+      case 'text':
+        return BarcodeType.text;
+      default:
+        return BarcodeType.text; // fallback
+    }
+  }
+
+  String get typeName {
+    switch (this) {
+      case BarcodeType.ean:
+        return 'ean';
+      case BarcodeType.code128:
+        return 'code128';
+      case BarcodeType.itf14:
+        return 'itf14';
+      case BarcodeType.text:
+        return 'text';
+      default:
+        return 'unknown';
+    }
+  }
+}
+
 class GenerateItemWidget extends StatelessWidget {
   final QRType qrType;
   const GenerateItemWidget({super.key, required this.qrType});

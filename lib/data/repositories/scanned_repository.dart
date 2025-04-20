@@ -3,13 +3,14 @@ import 'package:sqs_mobile/core/database/db_provider.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 
 class ScannedRepository {
-  Future<void> insert(ScannedModel code) async {
+  Future<int> insert(ScannedModel code) async {
     final db = await DBProvider().database;
-    await db.insert(
+    final id = await db.insert(
       'scanned',
       code.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    return id;
   }
 
   Future<List<ScannedModel>> getAll() async {
