@@ -95,7 +95,11 @@ class _UrlGenerateScreenState extends State<UrlGenerateScreen> {
             const SizedBox(height: 10),
             Form(
               key: _formKey,
-              child: CustomTextField(controller: textController, title: "Url"),
+              child: CustomTextField(
+                controller: textController,
+                title: "Url",
+                placeholder: "https://example.com",
+              ),
             ),
             const SizedBox(height: 20),
             ValueListenableBuilder<bool>(

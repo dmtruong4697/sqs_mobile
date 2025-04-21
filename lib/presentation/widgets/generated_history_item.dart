@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:sqs_mobile/data/models/generated.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/email_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/text_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/url_result_screen.dart';
 import 'package:sqs_mobile/presentation/widgets/generate_item_widget.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/date_time_helper.dart';
+import 'package:sqs_mobile/utils/email_helper.dart';
 import 'package:sqs_mobile/utils/type_helper.dart';
 
 class GeneratedHistoryItem extends StatefulWidget {
@@ -33,6 +35,20 @@ class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
     isDown = false;
   }
 
+  String getDisplayContent() {
+    if (widget.data.type == 'qrcode') {
+      if (widget.data.qrType == QRType.text.typeName ||
+          widget.data.qrType == QRType.url.typeName) {
+        return widget.data.content;
+      } else if (widget.data.qrType == QRType.email.typeName) {
+        return parseMatmsg(widget.data.content)?['address'] ?? "";
+      }
+    } else {
+      // xu ly truong hop barcode
+    }
+    return "";
+  }
+
   void onNavigate() {
     if (widget.data.qrType == 'text') {
       Navigator.push(
@@ -52,6 +68,18 @@ class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
         MaterialPageRoute(
           builder:
               (context) => UrlResultScreen(
+                textData: widget.data.content,
+                isFromHistoryList: true,
+                data: widget.data,
+              ),
+        ),
+      );
+    } else if (widget.data.qrType == 'email') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => EmailResultScreen(
                 textData: widget.data.content,
                 isFromHistoryList: true,
                 data: widget.data,
@@ -107,7 +135,7 @@ class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.data.content,
+                          getDisplayContent(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,

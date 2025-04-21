@@ -5,6 +5,9 @@
         android:label="Free QR Scanner"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-1216342141734145/1580358713"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

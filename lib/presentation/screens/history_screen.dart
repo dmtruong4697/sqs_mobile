@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sqs_mobile/presentation/screens/about_screen.dart';
 import 'package:sqs_mobile/presentation/screens/history/generated_history.dart';
 import 'package:sqs_mobile/presentation/screens/history/scanned_history.dart';
+import 'package:sqs_mobile/presentation/screens/setting_screen.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -30,6 +32,50 @@ class _HistoryScreenState extends State<HistoryScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.light,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(color: AppColors.primaryDark),
+              child: Text(
+                'Menu',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+            // ListTile(
+            //   leading: Icon(Icons.qr_code),
+            //   title: Text('Generate Qr code'),
+            // ),
+            // ListTile(
+            //   leading: Icon(Icons.qr_code_scanner),
+            //   title: Text('Scan Qr code'),
+            // ),
+            // ListTile(leading: Icon(Icons.history), title: Text('History')),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('About'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutScreen()),
+                );
+              },
+            ),
+            ListTile(title: Text('1.0.0')),
+          ],
+        ),
+      ),
       body: Stack(
         children: [
           // Positioned.fill(
@@ -56,14 +102,17 @@ class _HistoryScreenState extends State<HistoryScreen>
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      InkWell(
-                        onTap: () => print('click'),
-                        child: Image.asset(
-                          'assets/icons/menu.png',
-                          height: 32,
-                          width: 32,
-                          color: AppColors.primaryDark,
-                        ),
+                      Builder(
+                        builder:
+                            (context) => InkWell(
+                              onTap: () => Scaffold.of(context).openDrawer(),
+                              child: Image.asset(
+                                'assets/icons/menu.png',
+                                height: 32,
+                                width: 32,
+                                color: AppColors.primaryDark,
+                              ),
+                            ),
                       ),
                     ],
                   ),

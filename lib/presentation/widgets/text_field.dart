@@ -4,6 +4,7 @@ import 'package:sqs_mobile/theme/app_colors.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String title;
+  final String? placeholder;
   final TextInputType keyboardType;
 
   const CustomTextField({
@@ -11,6 +12,7 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.title,
     this.keyboardType = TextInputType.text,
+    this.placeholder,
   });
 
   @override
@@ -32,7 +34,7 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           decoration: InputDecoration(
-            hintText: "Nhập $title",
+            hintText: placeholder,
             hintStyle: const TextStyle(color: Color.fromARGB(155, 0, 0, 0)),
             filled: true,
             fillColor: const Color.fromARGB(47, 124, 68, 79),

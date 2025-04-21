@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
@@ -34,6 +36,7 @@ class _ScannedHistoryItemState extends State<ScannedHistoryItem> {
   }
 
   void onNavigate() {
+    log("email content: ${widget.data.content}");
     // if (widget.data.qrType == 'text') {
     //   Navigator.push(
     //     context,

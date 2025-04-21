@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/data/repositories/scanned_repository.dart';
-import 'package:sqs_mobile/presentation/widgets/Scanned_history_item.dart';
+import 'package:sqs_mobile/presentation/widgets/scanned_history_item.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/date_time_helper.dart';
 
@@ -56,7 +57,43 @@ class _ScannedHistoryState extends State<ScannedHistory>
           padding: const EdgeInsets.all(0),
           itemCount: scanned.length,
           itemBuilder: (context, index) {
-            return ScannedHistoryItem(data: scanned[index]);
+            final item = scanned[index];
+            return Slidable(
+              key: Key(item.id.toString()),
+              endActionPane: ActionPane(
+                motion: const DrawerMotion(),
+                extentRatio: 0.2,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: SlidableAction(
+                        onPressed: (context) async {
+                          await _scannedRepository.delete(item.id.toString());
+                          setState(() {
+                            scanned.removeAt(index);
+                          });
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Deleted~!!!'),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        backgroundColor: AppColors.error,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete,
+                        spacing: 10,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              child: ScannedHistoryItem(data: item),
+            );
           },
           separatorBuilder: (context, index) => const SizedBox(height: 8),
         ),

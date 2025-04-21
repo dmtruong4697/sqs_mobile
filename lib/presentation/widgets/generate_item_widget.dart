@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sqs_mobile/presentation/screens/generate/email_generate_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate/url_generate_screen.dart';
 import 'package:sqs_mobile/presentation/screens/scan_screen.dart';
@@ -148,6 +149,8 @@ class GenerateItemWidget extends StatelessWidget {
       case QRType.url:
         screen = UrlGenerateScreen(data: null);
         break;
+      case QRType.email:
+        screen = EmailGenerateScreen(data: null);
       default:
         screen = ScanScreen();
         break;

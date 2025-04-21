@@ -1,55 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:sqs_mobile/data/models/generated.dart';
 import 'package:sqs_mobile/data/repositories/generated_repository.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/email_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/text_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/url_result_screen.dart';
 import 'package:sqs_mobile/presentation/widgets/default_button.dart';
 import 'package:sqs_mobile/presentation/widgets/default_header.dart';
 import 'package:sqs_mobile/presentation/widgets/text_field.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
+import 'package:sqs_mobile/utils/validate_helper.dart';
 
-class TextGenerateScreen extends StatefulWidget {
+class EmailGenerateScreen extends StatefulWidget {
   final GeneratedModel? data;
-  const TextGenerateScreen({super.key, required this.data});
+  const EmailGenerateScreen({super.key, required this.data});
 
   @override
-  State<TextGenerateScreen> createState() => _TextGenerateScreenState();
+  State<EmailGenerateScreen> createState() => _EmailGenerateScreenState();
 }
 
-class _TextGenerateScreenState extends State<TextGenerateScreen> {
+class _EmailGenerateScreenState extends State<EmailGenerateScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController textController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController subjectController = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
+
   final GeneratedRepository _generatedRepository = GeneratedRepository();
 
-  late ValueNotifier<bool> isTextEmpty;
+  late ValueNotifier<bool> isInputValid;
   late int id;
 
   @override
   void initState() {
     super.initState();
-    textController.text = widget.data?.content ?? '';
+    addressController.text =
+        parseMatmsg(widget.data?.content ?? '')?['address'] ?? '';
+    subjectController.text =
+        parseMatmsg(widget.data?.content ?? '')?['subject'] ?? '';
+    messageController.text =
+        parseMatmsg(widget.data?.content ?? '')?['message'] ?? '';
     id = widget.data?.id ?? 0;
-    isTextEmpty = ValueNotifier(textController.text.isEmpty);
+    isInputValid = ValueNotifier(isValidEmail(addressController.text));
 
-    textController.addListener(() {
-      isTextEmpty.value = textController.text.isEmpty;
+    addressController.addListener(() {
+      isInputValid.value = isValidEmail(addressController.text);
     });
   }
 
   @override
   void dispose() {
-    textController.dispose();
-    isTextEmpty.dispose();
+    addressController.dispose();
     super.dispose();
   }
 
+  // tach chi tiet email
+  Map<String, String>? parseMatmsg(String input) {
+    if (!input.startsWith('MATMSG:')) return null;
+
+    final to = RegExp(r'TO:([^;]+);').firstMatch(input)?.group(1);
+    final sub = RegExp(r'SUB:([^;]+);').firstMatch(input)?.group(1);
+    final body = RegExp(r'BODY:([^;]+);').firstMatch(input)?.group(1);
+
+    if (to == null || sub == null || body == null) return null;
+
+    return {'address': to, 'subject': sub, 'message': body};
+  }
+
   Future<void> _handleSubmit() async {
-    final content = textController.text;
+    final content =
+        'MATMSG:TO:${addressController.text};SUB:${subjectController.text};BODY:${messageController.text};';
     final generatedCode = GeneratedModel(
       id: id != 0 ? id : null,
       content: content,
       type: 'qrcode',
       createAt: DateTime.now(),
-      qrType: widget.data?.qrType ?? 'text',
+      qrType: widget.data?.qrType ?? 'email',
       barcodeType: widget.data?.barcodeType,
     );
 
@@ -64,7 +88,7 @@ class _TextGenerateScreenState extends State<TextGenerateScreen> {
       MaterialPageRoute(
         builder:
             (_) =>
-                TextResultScreen(textData: content, isFromHistoryList: false),
+                EmailResultScreen(textData: content, isFromHistoryList: false),
       ),
     );
   }
@@ -92,27 +116,44 @@ class _TextGenerateScreenState extends State<TextGenerateScreen> {
         child: Column(
           children: [
             Image.asset(
-              "assets/icons/generate/text.png",
-              height: 80,
-              width: 80,
+              "assets/icons/generate/email.png",
+              height: 70,
+              width: 70,
             ),
             const SizedBox(height: 10),
             Form(
               key: _formKey,
-              child: CustomTextField(
-                controller: textController,
-                title: "Text",
-                placeholder: "text",
+              child: Column(
+                children: [
+                  CustomTextField(
+                    controller: addressController,
+                    title: "Email address",
+                    keyboardType: TextInputType.emailAddress,
+                    placeholder: "example@mail.com",
+                  ),
+                  SizedBox(height: 16),
+                  CustomTextField(
+                    controller: subjectController,
+                    title: "Subject",
+                    placeholder: "subject",
+                  ),
+                  SizedBox(height: 16),
+                  CustomTextField(
+                    controller: messageController,
+                    title: "Message",
+                    placeholder: "message",
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
             ValueListenableBuilder<bool>(
-              valueListenable: isTextEmpty,
-              builder: (_, disabled, __) {
+              valueListenable: isInputValid,
+              builder: (_, isValid, __) {
                 return DefaultButton(
                   title: "Generate QR Code",
                   onPress: _handleSubmit,
-                  disabled: disabled,
+                  disabled: !isValid,
                 );
               },
             ),
@@ -144,7 +185,7 @@ class _TextGenerateScreenState extends State<TextGenerateScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       children: [
-                        DefaultHeader(title: "Text"),
+                        DefaultHeader(title: "Email"),
                         const SizedBox(height: 40),
                         _buildInputForm(),
                       ],
