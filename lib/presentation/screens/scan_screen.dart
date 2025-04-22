@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/data/repositories/scanned_repository.dart';
 import 'package:sqs_mobile/presentation/screens/about_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/email_scan_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/scan_result/text_scan_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/scan_result/url_scan_result_screen.dart';
 import 'dart:io';
@@ -110,6 +111,20 @@ class _ScanScreenState extends State<ScanScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => UrlScanResultScreen(scanData: data),
+        ),
+      );
+    } else if (data.type == 'qrcode' && data.qrType == QRType.email.typeName) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EmailScanResultScreen(scanData: data),
+        ),
+      );
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TextScanResultScreen(scanData: data),
         ),
       );
     }

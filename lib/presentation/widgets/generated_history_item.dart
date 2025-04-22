@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sqs_mobile/data/models/generated.dart';
+import 'package:sqs_mobile/presentation/screens/generate/code128_generate_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/code128_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/code39_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/ean13_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/generate_result/ean8_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/email_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/text_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/url_result_screen.dart';
@@ -44,48 +49,103 @@ class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
         return parseMatmsg(widget.data.content)?['address'] ?? "";
       }
     } else {
-      // xu ly truong hop barcode
+      if (widget.data.barcodeType == BarcodeType.code128.typeName) {
+        return widget.data.content;
+      }
     }
     return "";
   }
 
   void onNavigate() {
-    if (widget.data.qrType == 'text') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => TextResultScreen(
-                textData: widget.data.content,
-                isFromHistoryList: true,
-                data: widget.data,
-              ),
-        ),
-      );
-    } else if (widget.data.qrType == 'url') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => UrlResultScreen(
-                textData: widget.data.content,
-                isFromHistoryList: true,
-                data: widget.data,
-              ),
-        ),
-      );
-    } else if (widget.data.qrType == 'email') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => EmailResultScreen(
-                textData: widget.data.content,
-                isFromHistoryList: true,
-                data: widget.data,
-              ),
-        ),
-      );
+    if (widget.data.type == 'qrcode') {
+      if (widget.data.qrType == 'text') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => TextResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      } else if (widget.data.qrType == 'url') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => UrlResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      } else if (widget.data.qrType == 'email') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => EmailResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      }
+    } else {
+      //xu ly barcode
+      if (widget.data.barcodeType == 'code128') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Code128ResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      } else if (widget.data.barcodeType == 'code39') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Code39ResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      } else if (widget.data.barcodeType == 'ean13') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Ean13ResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      } else if (widget.data.barcodeType == 'ean8') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Ean8ResultScreen(
+                  textData: widget.data.content,
+                  isFromHistoryList: true,
+                  data: widget.data,
+                ),
+          ),
+        );
+      }
     }
   }
 

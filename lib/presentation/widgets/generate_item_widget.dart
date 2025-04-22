@@ -88,13 +88,17 @@ extension QRTypesExtension on QRType {
   }
 }
 
-enum BarcodeType { ean, code128, itf14, text }
+enum BarcodeType { ean13, ean8, code39, code128, itf14, text }
 
 extension BarcodeTypeExtension on BarcodeType {
   static BarcodeType fromString(String type) {
     switch (type) {
-      case 'ean':
-        return BarcodeType.ean;
+      case 'ean13':
+        return BarcodeType.ean13;
+      case 'ean8':
+        return BarcodeType.ean13;
+      case 'code39':
+        return BarcodeType.ean13;
       case 'code128':
         return BarcodeType.code128;
       case 'itf14':
@@ -108,8 +112,12 @@ extension BarcodeTypeExtension on BarcodeType {
 
   String get typeName {
     switch (this) {
-      case BarcodeType.ean:
-        return 'ean';
+      case BarcodeType.ean13:
+        return 'ean13';
+      case BarcodeType.ean8:
+        return 'ean8';
+      case BarcodeType.code39:
+        return 'code39';
       case BarcodeType.code128:
         return 'code128';
       case BarcodeType.itf14:

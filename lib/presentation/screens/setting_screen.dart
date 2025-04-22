@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sqs_mobile/theme/app_colors.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -46,6 +47,7 @@ class _SettingScreenState extends State<SettingScreen> {
             title: const Text('Sound'),
             secondary: const Icon(Icons.volume_up),
             value: isSoundOn,
+            activeColor: AppColors.primaryLight,
             onChanged: (value) {
               setState(() {
                 isSoundOn = value;
@@ -57,6 +59,7 @@ class _SettingScreenState extends State<SettingScreen> {
             title: const Text('Vibrate'),
             secondary: const Icon(Icons.vibration),
             value: isVibrateOn,
+            activeColor: AppColors.primaryLight,
             onChanged: (value) {
               setState(() {
                 isVibrateOn = value;

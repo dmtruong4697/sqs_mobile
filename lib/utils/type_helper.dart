@@ -41,16 +41,12 @@ BarcodeType detectBarcodeType(String input) {
   input = input.trim();
 
   if (RegExp(r'^\d{12,13}$').hasMatch(input)) {
-    // EAN-13 hoặc UPC-A
-    return BarcodeType.ean;
+    return BarcodeType.ean13;
   } else if (RegExp(r'^\d{8}$').hasMatch(input)) {
-    // EAN-8
-    return BarcodeType.ean;
+    return BarcodeType.ean8;
   } else if (RegExp(r'^[A-Z0-9]{10,20}$').hasMatch(input)) {
-    // Code 128 thường gồm ký tự chữ/số (ví dụ mã kho, đơn hàng)
     return BarcodeType.code128;
   } else if (RegExp(r'^[0-9]{14}$').hasMatch(input)) {
-    // ITF-14 (mã thùng carton/logistics)
     return BarcodeType.itf14;
   }
 

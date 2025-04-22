@@ -97,6 +97,7 @@ flutter:
     - assets/icons/generate/url.png
     - assets/icons/generate/whatsapp.png
     - assets/icons/generate/wifi.png
+    - assets/icons/generate/barcode.png
 
     - assets/images/background.png
 
