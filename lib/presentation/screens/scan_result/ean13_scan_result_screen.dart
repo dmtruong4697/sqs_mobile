@@ -1,26 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/presentation/screens/show_image_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/webview_screen.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/date_time_helper.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ScanResultScreen extends StatefulWidget {
+class Ean13ScanResultScreen extends StatefulWidget {
   final ScannedModel scanData;
 
-  const ScanResultScreen({super.key, required this.scanData});
+  const Ean13ScanResultScreen({super.key, required this.scanData});
 
   @override
-  State<ScanResultScreen> createState() => _ScanResultScreenState();
+  State<Ean13ScanResultScreen> createState() => _Ean13ScanResultScreenState();
 }
 
-class _ScanResultScreenState extends State<ScanResultScreen> {
+class _Ean13ScanResultScreenState extends State<Ean13ScanResultScreen> {
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Copied to clipboard')));
+  }
+
+  Future<void> _launchInBrowser(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -43,7 +55,10 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           //   tooltip: 'Xóa',
           // ),
           IconButton(
-            icon: const Icon(Icons.add, color: AppColors.white),
+            icon: const Icon(
+              Icons.favorite_border_outlined,
+              color: AppColors.white,
+            ),
             onPressed: () {
               print('Add pressed');
             },
@@ -52,7 +67,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           IconButton(
             icon: const Icon(Icons.share, color: AppColors.white),
             onPressed: () {
-              print('Share pressed');
+              Share.share(widget.scanData.content);
             },
             tooltip: 'Chia sẻ',
           ),
@@ -79,7 +94,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'QRCode • ${formatDate(widget.scanData.createAt)} • ${formatTime(widget.scanData.createAt)}',
+                          'Barcode • ${formatDate(widget.scanData.createAt)} • ${formatTime(widget.scanData.createAt)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -130,7 +145,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.qr_code, size: 20),
+                  icon: const Icon(Icons.view_week, size: 20),
                   label: const Text('Show Image'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -165,6 +180,84 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     shadowColor: Colors.black.withOpacity(0.1),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final searchUrl =
+                          'https://www.google.com/search?q=${Uri.encodeComponent(widget.scanData.content)}';
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WebViewScreen(url: searchUrl),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.public,
+                      size: 20,
+                      color: AppColors.white,
+                    ),
+                    label: const Text(
+                      'Search with Google',
+                      style: TextStyle(color: AppColors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      backgroundColor: AppColors.primaryDark,
+                      foregroundColor: Colors.black,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.1),
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final searchUrl =
+                          'https://www.google.com/search?q=${Uri.encodeComponent(widget.scanData.content)}';
+                      _launchInBrowser(searchUrl);
+                    },
+                    icon: const Icon(
+                      Icons.public,
+                      size: 20,
+                      color: AppColors.white,
+                    ),
+                    label: const Text(
+                      'Google search with default browser',
+                      style: TextStyle(color: AppColors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      backgroundColor: AppColors.primaryDark,
+                      foregroundColor: Colors.black,
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadowColor: Colors.black.withOpacity(0.1),
+                      alignment: Alignment.centerLeft,
+                    ),
                   ),
                 ),
               ],

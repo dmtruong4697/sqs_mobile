@@ -18,7 +18,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
   final List<QRType> type = [
     QRType.text,
     QRType.url,
-    QRType.telephone,
+    // QRType.telephone,
     QRType.email,
   ];
 
@@ -106,7 +106,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
                 // QR Grid
                 Text(
                   'QR Code',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(height: 10),
                 GridView.builder(
@@ -129,7 +129,7 @@ class _GenerateScreenState extends State<GenerateScreen> {
                 // Barcode Grid
                 Text(
                   'Barcode',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(height: 10),
                 GridView.builder(

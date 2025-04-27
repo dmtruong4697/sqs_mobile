@@ -42,7 +42,7 @@ class _ShowImageResultScreenState extends State<ShowImageResultScreen> {
         ], text: "Here is your QR/Barcode image!");
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Đã lưu hình vào bộ nhớ tạm')),
+          const SnackBar(content: Text('Image saved to clipboard')),
         );
       }
     } catch (e) {

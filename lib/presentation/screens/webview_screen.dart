@@ -9,9 +9,13 @@ class WebViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final WebViewController controller =
+        WebViewController()
+          ..setJavaScriptMode(JavaScriptMode.unrestricted)
+          ..loadRequest(Uri.parse(url));
+
     return Scaffold(
       appBar: AppBar(
-        // title: const Text('Website', style: TextStyle(color: AppColors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () {
@@ -20,9 +24,7 @@ class WebViewScreen extends StatelessWidget {
         ),
         backgroundColor: AppColors.primaryDark,
       ),
-      body: WebViewWidget(
-        controller: WebViewController()..loadRequest(Uri.parse(url)),
-      ),
+      body: WebViewWidget(controller: controller),
     );
   }
 }

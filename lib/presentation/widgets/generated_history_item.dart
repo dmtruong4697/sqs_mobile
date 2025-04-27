@@ -49,9 +49,9 @@ class _GeneratedHistoryItemState extends State<GeneratedHistoryItem> {
         return parseMatmsg(widget.data.content)?['address'] ?? "";
       }
     } else {
-      if (widget.data.barcodeType == BarcodeType.code128.typeName) {
-        return widget.data.content;
-      }
+      // if (widget.data.barcodeType == BarcodeType.code128.typeName) {
+      return widget.data.content;
+      // }
     }
     return "";
   }

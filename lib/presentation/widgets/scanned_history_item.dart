@@ -5,6 +5,13 @@ import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/presentation/screens/generate/text_generate_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/text_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/generate_result/url_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/code128_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/code39_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/ean13_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/ean8_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/email_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/text_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/url_scan_result_screen.dart';
 import 'package:sqs_mobile/presentation/widgets/generate_item_widget.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/date_time_helper.dart';
@@ -36,32 +43,80 @@ class _ScannedHistoryItemState extends State<ScannedHistoryItem> {
   }
 
   void onNavigate() {
-    log("email content: ${widget.data.content}");
-    // if (widget.data.qrType == 'text') {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder:
-    //           (context) => TextResultScreen(
-    //             textData: widget.data.content,
-    //             isFromHistoryList: true,
-    //             data: widget.data,
-    //           ),
-    //     ),
-    //   );
-    // } else if (widget.data.qrType == 'url') {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder:
-    //           (context) => UrlResultScreen(
-    //             textData: widget.data.content,
-    //             isFromHistoryList: true,
-    //             data: widget.data,
-    //           ),
-    //     ),
-    //   );
-    // }
+    if (widget.data.type == 'qrcode') {
+      //xu ly qr code
+      if (widget.data.qrType == 'text') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TextScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else if (widget.data.qrType == 'url') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UrlScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else if (widget.data.qrType == 'email') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else {
+        //khong match loai nao
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TextScanResultScreen(scanData: widget.data),
+          ),
+        );
+      }
+    } else {
+      //xu ly barcode
+      if (widget.data.barcodeType == BarcodeType.code128.typeName) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Code128ScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else if (widget.data.barcodeType == BarcodeType.code39.typeName) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Code39ScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else if (widget.data.barcodeType == BarcodeType.ean13.typeName) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Ean13ScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else if (widget.data.barcodeType == BarcodeType.ean8.typeName) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Ean8ScanResultScreen(scanData: widget.data),
+          ),
+        );
+      } else {
+        //khong match loai nao
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => Code128ScanResultScreen(scanData: widget.data),
+          ),
+        );
+      }
+    }
   }
 
   @override

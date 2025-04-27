@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/presentation/screens/show_image_result_screen.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
@@ -22,7 +23,7 @@ class _EmailScanResultScreenState extends State<EmailScanResultScreen> {
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text('Đã sao chép vào clipboard')));
+    ).showSnackBar(const SnackBar(content: Text('Coppied to clipboard')));
   }
 
   Future<void> sendEmail() async {
@@ -62,7 +63,10 @@ class _EmailScanResultScreenState extends State<EmailScanResultScreen> {
           //   tooltip: 'Xóa',
           // ),
           IconButton(
-            icon: const Icon(Icons.add, color: AppColors.white),
+            icon: const Icon(
+              Icons.favorite_border_outlined,
+              color: AppColors.white,
+            ),
             onPressed: () {
               print('Add pressed');
             },
@@ -71,7 +75,7 @@ class _EmailScanResultScreenState extends State<EmailScanResultScreen> {
           IconButton(
             icon: const Icon(Icons.share, color: AppColors.white),
             onPressed: () {
-              print('Share pressed');
+              Share.share(widget.scanData.content);
             },
             tooltip: 'Chia sẻ',
           ),

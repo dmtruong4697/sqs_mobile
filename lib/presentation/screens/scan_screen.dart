@@ -9,6 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/data/repositories/scanned_repository.dart';
 import 'package:sqs_mobile/presentation/screens/about_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/code128_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/code39_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/ean13_scan_result_screen.dart';
+import 'package:sqs_mobile/presentation/screens/scan_result/ean8_scan_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/scan_result/email_scan_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/scan_result/text_scan_result_screen.dart';
 import 'package:sqs_mobile/presentation/screens/scan_result/url_scan_result_screen.dart';
@@ -20,6 +24,9 @@ import 'package:sqs_mobile/presentation/widgets/generate_item_widget.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/type_helper.dart';
 import 'package:vibration/vibration.dart';
+import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart'
+    as mlkit;
+import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
@@ -99,34 +106,76 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Future<void> _handleNavigate(ScannedModel data) async {
-    if (data.type == 'qrcode' && data.qrType == QRType.text.typeName) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TextScanResultScreen(scanData: data),
-        ),
-      );
-    } else if (data.type == 'qrcode' && data.qrType == QRType.url.typeName) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => UrlScanResultScreen(scanData: data),
-        ),
-      );
-    } else if (data.type == 'qrcode' && data.qrType == QRType.email.typeName) {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EmailScanResultScreen(scanData: data),
-        ),
-      );
+    if (data.type == 'qrcode') {
+      if (data.qrType == QRType.text.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TextScanResultScreen(scanData: data),
+          ),
+        );
+      } else if (data.qrType == QRType.url.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => UrlScanResultScreen(scanData: data),
+          ),
+        );
+      } else if (data.qrType == QRType.email.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EmailScanResultScreen(scanData: data),
+          ),
+        );
+      } else {
+        //khong match loai nao
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TextScanResultScreen(scanData: data),
+          ),
+        );
+      }
     } else {
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TextScanResultScreen(scanData: data),
-        ),
-      );
+      //handle barcode
+      if (data.barcodeType == BarcodeType.code128.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Code128ScanResultScreen(scanData: data),
+          ),
+        );
+      } else if (data.barcodeType == BarcodeType.code39.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Code39ScanResultScreen(scanData: data),
+          ),
+        );
+      } else if (data.barcodeType == BarcodeType.ean13.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Ean13ScanResultScreen(scanData: data),
+          ),
+        );
+      } else if (data.barcodeType == BarcodeType.ean8.typeName) {
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Ean8ScanResultScreen(scanData: data),
+          ),
+        );
+      } else {
+        //khong match loai nao
+        await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Code128ScanResultScreen(scanData: data),
+          ),
+        );
+      }
     }
   }
 
@@ -136,29 +185,75 @@ class _ScanScreenState extends State<ScanScreen> {
 
     if (image != null) {
       await controller?.pauseCamera();
-      print('Ảnh đã chọn: ${image.path}');
-      String? result = 'Kết quả từ ảnh (placeholder)';
-      if (result != null) {
-        // await _audioPlayer.play(AssetSource('sounds/beep.mp3'));
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => ScanResultScreen(scanData: result),
-        //   ),
-        // ).then((_) {
-        //   controller?.resumeCamera();
-        // });
-      } else {
-        controller?.resumeCamera();
+      final inputImage = InputImage.fromFilePath(image.path);
+      final barcodeScanner = mlkit.BarcodeScanner();
+
+      try {
+        final List<mlkit.Barcode> barcodes = await barcodeScanner.processImage(
+          inputImage,
+        );
+
+        if (barcodes.isNotEmpty) {
+          final barcode = barcodes.first;
+          final code = barcode.rawValue ?? '';
+          final format = barcode.format;
+
+          final scannedCode = ScannedModel(
+            content: code,
+            type: format == mlkit.BarcodeFormat.qrCode ? 'qrcode' : 'barcode',
+            createAt: DateTime.now(),
+            qrType: detectQRType(code).typeName,
+            barcodeType: detectBarcodeType(code).typeName,
+          );
+
+          await _scannedRepository.insert(scannedCode);
+
+          if (soundEnabled) {
+            await _audioPlayer.play(AssetSource('sounds/beep.mp3'));
+          }
+
+          if (vibrateEnabled && await Vibration.hasAmplitudeControl()) {
+            Vibration.vibrate(amplitude: 128);
+          }
+
+          await _handleNavigate(scannedCode);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No QR code or Barcode found in the image.'),
+            ),
+          );
+        }
+      } catch (e) {
+        log('Lỗi khi quét ảnh: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('An error occurred while processing the image.'),
+          ),
+        );
+      } finally {
+        await controller?.resumeCamera();
       }
     }
   }
 
   void _toggleFlash() async {
-    await controller?.toggleFlash();
-    setState(() {
-      isFlashOn = !isFlashOn;
-    });
+    try {
+      await controller?.toggleFlash();
+      final isOn = await controller?.getFlashStatus();
+      setState(() {
+        isFlashOn = isOn ?? false;
+      });
+    } catch (e) {
+      debugPrint('Flash cannot be turned on/off: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'The device does not support flash or an error has occurred.',
+          ),
+        ),
+      );
+    }
   }
 
   void _flipCamera() async {
@@ -207,6 +302,16 @@ class _ScanScreenState extends State<ScanScreen> {
             ListTile(
               leading: Icon(Icons.info),
               title: Text('About'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AboutScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.description),
+              title: Text('Term of use & Privacy policy'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -267,6 +372,24 @@ class _ScanScreenState extends State<ScanScreen> {
                       ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            bottom: 140,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 40),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Text(
+                "Place the QR/Barcode inside the frame to scan.",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
           ),
         ],

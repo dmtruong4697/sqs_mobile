@@ -21,7 +21,7 @@
 //       data,
 //       width: size.width,
 //       height: size.height,
-//       drawText: false, // Nếu bạn không muốn hiện text dưới mã vạch
+//       drawText: false,
 //     );
 //   }
 

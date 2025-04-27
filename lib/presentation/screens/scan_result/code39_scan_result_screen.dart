@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:sqs_mobile/data/models/scanned.dart';
 import 'package:sqs_mobile/presentation/screens/show_image_result_screen.dart';
 import 'package:sqs_mobile/theme/app_colors.dart';
 import 'package:sqs_mobile/utils/date_time_helper.dart';
 
-class ScanResultScreen extends StatefulWidget {
+class Code39ScanResultScreen extends StatefulWidget {
   final ScannedModel scanData;
 
-  const ScanResultScreen({super.key, required this.scanData});
+  const Code39ScanResultScreen({super.key, required this.scanData});
 
   @override
-  State<ScanResultScreen> createState() => _ScanResultScreenState();
+  State<Code39ScanResultScreen> createState() => _Code39ScanResultScreenState();
 }
 
-class _ScanResultScreenState extends State<ScanResultScreen> {
+class _Code39ScanResultScreenState extends State<Code39ScanResultScreen> {
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(
@@ -43,7 +44,10 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           //   tooltip: 'Xóa',
           // ),
           IconButton(
-            icon: const Icon(Icons.add, color: AppColors.white),
+            icon: const Icon(
+              Icons.favorite_border_outlined,
+              color: AppColors.white,
+            ),
             onPressed: () {
               print('Add pressed');
             },
@@ -52,7 +56,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
           IconButton(
             icon: const Icon(Icons.share, color: AppColors.white),
             onPressed: () {
-              print('Share pressed');
+              Share.share(widget.scanData.content);
             },
             tooltip: 'Chia sẻ',
           ),
@@ -79,7 +83,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'QRCode • ${formatDate(widget.scanData.createAt)} • ${formatTime(widget.scanData.createAt)}',
+                          'Barcode • ${formatDate(widget.scanData.createAt)} • ${formatTime(widget.scanData.createAt)}',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -130,7 +134,7 @@ class _ScanResultScreenState extends State<ScanResultScreen> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.qr_code, size: 20),
+                  icon: const Icon(Icons.view_week, size: 20),
                   label: const Text('Show Image'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
